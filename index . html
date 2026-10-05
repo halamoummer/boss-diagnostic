@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فحص المدير ❤️</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #07111f;
+            color: #e8f1ff;
+            font-family: "Tahoma", "Arial", sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+        }
+
+        .dashboard {
+            background: #0d1b2a;
+            border: 1px solid #243b53;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #243b53;
+            padding-bottom: 18px;
+            margin-bottom: 25px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .status {
+            color: #55efc4;
+            font-size: 14px;
+        }
+
+        .screen {
+            text-align: center;
+            min-height: 390px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #b8c7d9;
+            line-height: 1.9;
+            font-size: 17px;
+        }
+
+        .scan-list {
+            text-align: right;
+            margin: 25px auto;
+            width: 90%;
+            max-width: 550px;
+        }
+
+        .scan-item {
+            background: #091522;
+            border: 1px solid #1d344a;
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin: 10px 0;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: 0.5s;
+        }
+
+        .scan-item.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .green {
+            color: #55efc4;
+        }
+
+        .red {
+            color: #ff7675;
+        }
+
+        .yellow {
+            color: #ffeaa7;
+        }
+
+        .heart {
+            color: #ff6b81;
+        }
+
+        .error-box {
+            border: 1px solid #ff7675;
+            background: rgba(255, 118, 117, 0.08);
+            border-radius: 14px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .error-title {
+            color: #ff7675;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            min-height: 230px;
+            margin: 25px auto;
+        }
+
+        .option-btn {
+            background: #14283d;
+            border: 1px solid #31516e;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.25s;
+            margin: 7px;
+        }
+
+        .option-btn:hover {
+            background: #1d3b58;
+        }
+
+        .correct {
+            border-color: #55efc4;
+        }
+
+        .message {
+            background: #10243a;
+            border-right: 4px solid #55efc4;
+            padding: 18px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: right;
+        }
+
+        .main-btn {
+            background: #55efc4;
+            color: #07111f;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .main-btn:hover {
+            transform: scale(1.03);
+        }
+
+        .progress {
+            height: 5px;
+            background: #14283d;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 25px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #55efc4;
+            transition: width 0.5s;
+        }
+
+        .typing {
+            min-height: 180px;
+            text-align: right;
+            background: #091522;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #1d344a;
+            line-height: 2;
+            font-size: 18px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 7px;
+            height: 20px;
+            background: #55efc4;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .final {
+            color: #ffb6c1;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .option-btn {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="dashboard">
+
+        <div class="top">
+            <div class="title">نظام فحص المدير 👨‍💻</div>
+            <div class="status">● النظام يعمل</div>
+        </div>
+
+        <div class="screen" id="screen">
+
+            <h1>مرحبًا أيها المدير 👋</h1>
+
+            <p>
+                جاري تجهيز الفحص اليومي للمدير...
+                <br>
+                يرجى عدم إغلاق النظام.
+            </p>
+
+            <button class="main-btn" onclick="startScan()">
+                بدء الفحص
+            </button>
+
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const screen = document.getElementById("screen");
+    const progress = document.getElementById("progress");
+
+    function startScan() {
+
+        screen.innerHTML = `
+            <h2>🔍 جاري الفحص...</h2>
+
+            <div class="scan-list">
+
+                <div class="scan-item" id="scan1">
+                    🍔 فحص مستوى الجوع...
+                    <span class="green">جاري التحقق</span>
+                </div>
+
+                <div class="scan-item" id="scan2">
+                    ☕ فحص الحاجة للقهوة...
+                    <span class="green">جاري التحقق</span>
+                </div>
+
+                <div class="scan-item" id="scan3">
+                    🔋 فحص مستوى الطاقة...
+                    <span class="green">جاري التحقق</span>
+                </div>
+
+                <div class="scan-item" id="scan4">
+                    😴 فحص الحاجة للراحة...
+                    <span class="green">جاري التحقق</span>
+                </div>
+
+                <div class="scan-item" id="scan5">
+                    ❤️ فحص مستوى الاشتياق...
+                    <span class="green">جاري التحقق</span>
+                </div>
+
+            </div>
+        `;
+
+        let items = [
+            "scan1",
+            "scan2",
+            "scan3",
+            "scan4",
+            "scan5"
+        ];
+
+        let i = 0;
+
+        let interval = setInterval(() => {
+
+            if (i < items.length) {
+
+                document.getElementById(items[i])
+                    .classList.add("show");
+
+                progress.style.width =
+                    ((i + 1) / items.length * 100) + "%";
+
+                i++;
+
+            } else {
+
+                clearInterval(interval);
+
+                setTimeout(showResults, 800);
+            }
+
+        }, 700);
+    }
+
+
+    function showResults() {
+
+        progress.style.width = "100%";
+
+        screen.innerHTML = `
+
+            <h2>📊 نتائج الفحص</h2>
+
+            <div class="scan-list">
+
+                <div class="scan-item show">
+                    🍔 مستوى الجوع:
+                    <span class="red">حرج جدًا</span>
+                </div>
+
+                <div class="scan-item show">
+                    ☕ الحاجة للقهوة:
+                    <span class="yellow">مرتفعة</span>
+                </div>
+
+                <div class="scan-item show">
+                    🔋 مستوى الطاقة:
+                    <span class="yellow">منخفض</span>
+                </div>
+
+                <div class="scan-item show">
+                    😴 الحاجة للراحة:
+                    <span class="red">مرتفعة جدًا</span>
+                </div>
+
+                <div class="scan-item show">
+                    ❤️ الاشتياق لحلا:
+                    <span class="heart">تم اكتشافه ❤️</span>
+                </div>
+
+            </div>
+
+            <button class="main-btn" onclick="showError()">
+                متابعة الفحص
+            </button>
+        `;
+    }
+
+
+    function showError() {
+
+        screen.innerHTML = `
+
+            <div class="error-box">
+
+                <div class="error-title">
+                    🚨 خطأ في النظام
+                </div>
+
+                <p>
+                    تعذر إكمال الفحص.
+                </p>
+
+                <p>
+                    <strong>
+                    السبب: المدير يحتاج إلى تناول الغداء أولًا 🍽️
+                    </strong>
+                </p>
+
+                <p>
+                    يرجى اختيار مكان مناسب لتناول الغداء.
+                </p>
+
+            </div>
+
+            <button class="main-btn" onclick="choosePlace()">
+                حل المشكلة
+            </button>
+        `;
+    }
+
+
+    function choosePlace() {
+
+        screen.innerHTML = `
+
+            <h2>🍽️ أين ستذهب لتتناول الغداء؟</h2>
+
+            <p>
+                اختر خيارًا واحدًا فقط.
+            </p>
+
+            <div class="options">
+
+                <button
+                    class="option-btn runaway"
+                    onclick="wrongPlace(this, 'restaurant')">
+                    🍽️ مطعم
+                </button>
+
+                <button
+                    class="option-btn runaway"
+                    onclick="wrongPlace(this, 'home')">
+                    🏠 البيت
+                </button>
+
+                <button
+                    class="option-btn runaway"
+                    onclick="wrongPlace(this, 'quick')">
+                    🥪 أجيب شيء سريع
+                </button>
+
+                <button
+                    class="option-btn correct"
+                    onclick="correctPlace()">
+                    ⛺ الخيمة عند ماما
+                </button>
+
+            </div>
+
+            <div id="placeMessage"></div>
+        `;
+
+        activateRunawayButtons();
+    }
+
+
+    function wrongPlace(button, type) {
+
+        let message = "";
+
+        if (type === "restaurant") {
+            message = "❌ يبدو أنه لا يوجد وقت كافٍ للعودة.";
+        }
+
+        if (type === "home") {
+            message = "❌ خيار غير متاح.";
+        }
+
+        if (type === "quick") {
+            message = "❌ حل مؤقت، ونحن نبحث عن غداء حقيقي.";
+        }
+
+        document.getElementById("placeMessage").innerHTML = `
+            <div class="message">
+                ${message}
+            </div>
+        `;
+
+        moveButton(button);
+    }
+
+
+    function correctPlace() {
+
+        screen.innerHTML = `
+
+            <h2>⛺ الخيمة عند ماما</h2>
+
+            <div class="message">
+
+                <strong class="green">
+                    ايوااا هذا خيار ممتاز 😂❤️
+                </strong>
+
+                <p>
+                    اختيار موفق يا مدير.
+                </p>
+
+            </div>
+
+            <button class="main-btn" onclick="chooseTime()">
+                التالي ⏭️
+            </button>
+        `;
+    }
+
+
+    function chooseTime() {
+
+        screen.innerHTML = `
+
+            <h2>⏰ متى ستذهب لتتناول الغداء؟</h2>
+
+            <p>
+                اختر وقتًا مناسبًا.
+            </p>
+
+            <div class="options">
+
+                <button
+                    class="option-btn runaway"
+                    onclick="wrongTime(this)">
+                    4:00
+                </button>
+
+                <button
+                    class="option-btn runaway"
+                    onclick="wrongTime(this)">
+                    8:00
+                </button>
+
+                <button
+                    class="option-btn runaway"
+                    onclick="wrongTime(this)">
+                    7:00
+                </button>
+
+                <button
+                    class="option-btn correct"
+                    onclick="correctTime()">
+                    5:00
+                </button>
+
+            </div>
+
+            <div id="timeMessage"></div>
+        `;
+
+        activateRunawayButtons();
+    }
+
+
+    function wrongTime(button) {
+
+        document.getElementById("timeMessage").innerHTML = `
+            <div class="message">
+                ❌ هذا الوقت غير مناسب... حاول مرة ثانية 😂
+            </div>
+        `;
+
+        moveButton(button);
+    }
+
+
+    function correctTime() {
+
+        screen.innerHTML = `
+
+            <h2>✅ تم الاتفاق!</h2>
+
+            <div class="message">
+
+                <p>
+                    اتفقنا تروح الساعة
+                    <strong class="green">5:00</strong>
+                    وتتغدى 🍽️❤️
+                </p>
+
+                <p>
+                    لا يوجد أي مجال للتفاوض الآن 😂
+                </p>
+
+            </div>
+
+            <button class="main-btn" onclick="showMessage()">
+                إكمال الفحص ❤️
+            </button>
+        `;
+    }
+
+
+    function showMessage() {
+
+        screen.innerHTML = `
+
+            <h2>💌 رسالة خاصة</h2>
+
+            <div class="typing">
+                <span id="typedText"></span>
+                <span class="cursor"></span>
+            </div>
+
+            <button
+                class="main-btn hidden"
+                id="closeButton"
+                onclick="closeSystem()">
+                إغلاق النظام
+            </button>
+        `;
+
+        const message =
+        "دير بالك على حالك، لا تضل غرقان بالشغل وتنسى حالك. كل، ارتاح شوي، وخلي بالك إن في حدا مشتاقلك وبتمنى يكون يومك أخف وأحلى ❤️";
+
+        typeMessage(message);
+    }
+
+
+    function typeMessage(text) {
+
+        let index = 0;
+
+        const element =
+            document.getElementById("typedText");
+
+        const interval = setInterval(() => {
+
+            element.textContent += text[index];
+
+            index++;
+
+            if (index >= text.length) {
+
+                clearInterval(interval);
+
+                document
+                    .getElementById("closeButton")
+                    .classList.remove("hidden");
+            }
+
+        }, 45);
+    }
+
+
+    function closeSystem() {
+
+        screen.innerHTML = `
+
+            <h1>✅ تم إغلاق النظام</h1>
+
+            <p>
+                تم حل جميع المشاكل بنجاح.
+            </p>
+
+            <p class="final">
+                لكن في حدا لسا مشتاقلك ❤️
+            </p>
+
+            <button
+                class="main-btn"
+                onclick="location.reload()">
+                إعادة الفحص
+            </button>
+        `;
+
+        progress.style.width = "100%";
+    }
+
+
+    function activateRunawayButtons() {
+
+        const buttons =
+            document.querySelectorAll(".runaway");
+
+        buttons.forEach(button => {
+
+            button.addEventListener("mouseenter", () => {
+                moveButton(button);
+            });
+
+        });
+    }
+
+
+    function moveButton(button) {
+
+        const container =
+            document.querySelector(".options");
+
+        const maxX =
+            container.clientWidth - button.offsetWidth;
+
+        const maxY =
+            container.clientHeight - button.offsetHeight;
+
+        const x =
+            Math.max(0, Math.random() * maxX);
+
+        const y =
+            Math.max(0, Math.random() * maxY);
+
+        button.style.position = "absolute";
+
+        button.style.left = x + "px";
+        button.style.top = y + "px";
+    }
+
+</script>
+
+</body>
+</html>
